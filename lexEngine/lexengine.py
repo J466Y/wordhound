@@ -1,7 +1,7 @@
 #Lexical Analysis Engine
 import numpy as np
-import word as wd
-import chains
+import lexEngine.word as wd
+import lexEngine.chains
 from configobj import ConfigObj
 class lexengine:
 	
@@ -29,8 +29,7 @@ class lexengine:
 		self.percentage = lexConf['threshold']
 		ans = ""
 		while (ans != "y" and ans != "n"):
-			print "[+] Would you like additional analysis to be done on gathered data in an attempt to build passphrases? (This can take a long time with big data sets 1> hour)\ny or n:"
-			ans = raw_input()
+			ans = input("[+] Would you like additional analysis to be done on gathered data in an attempt to build passphrases? (This can take a long time with big data sets 1> hour)\ny or n:")
 		if ans == "y":
 			analyse = True
 		if ans == "n":
@@ -56,7 +55,7 @@ class lexengine:
 			sanitisedRe.append(line.strip())
 		f.close()
 		self.blacklistedWords = sanitisedRe
-		print "[-] Loaded blacklist"
+		print ("[-] Loaded blacklist")
 
 	def loadCorpus(self, location):
 		#Loads the corpus into corpusDict and saves the word + the % frequency
@@ -84,7 +83,7 @@ class lexengine:
 		# .5 = half as often
 		try:
 			return percentageWordOccurs/(self.corpusDict[word])
-		except Exception, e:
+		except (Exception, e):
 			return "EMPTY"
 
 	def sortWordList(self, wlist):
@@ -99,7 +98,7 @@ class lexengine:
 	    return wlist
 	def wordCount(self, text):
 		#THis function returns a dictionary with each word in the text and the number of times it occurs
-		print "[-] Preparing datastructures for analysis"
+		print ("[-] Preparing datastructures for analysis")
 		text = self.sanitise(text)
 		text = text.split(' ')
 		for word in text:
@@ -127,7 +126,7 @@ class lexengine:
 			else:
 				sanitised += " "
 		return sanitised
-		print " - text sanitised"
+		print (" - text sanitised")
 
 	def stats(self):
 		count = 0
@@ -149,10 +148,10 @@ class lexengine:
 		for w in self.wordObjectList:
 			w.frequency = float(w.occurence)/float(self.wordCountDictTotal)
 		#print " - mean {0}\n - median {1}\n - standard deviation {2}\n - total unique words {3}".format(self.wordCountDictMean,median,self.wordCountDictstdDev,total)
-		print "[-] Done analysing text"
+		print ("[-] Done analysing text")
 	
 	def buildChains(self, text):
-		print "[-] Building Chains"
+		print ("[-] Building Chains")
 		
 		#PARSE 1: Build word objects
 		text = self.sanitise(text)
@@ -163,7 +162,7 @@ class lexengine:
 			chainObject.addChain(i)
 
 		#Until I build some more intelligence into it, its going to discount a phrase if it contains words in blacklist
-		print "[-] Compiling chains"
+		print ("[-] Compiling chains")
 		temp = chainObject.compileChains()
 		for chain in temp:
 			add = True
@@ -175,7 +174,7 @@ class lexengine:
 				self.chainList.append(chain)
 
 
-		print "[-] Done analysing chains"
+		print ("[-] Done analysing chains")
 
 
 	def trimPercentage(self):
@@ -183,7 +182,7 @@ class lexengine:
 		
 		results = []
 		maybe = []
-		print "[-] {0} unique words about to be processed".format(len(self.wordObjectList))
+		print ("[-] {0} unique words about to be processed".format(len(self.wordObjectList)))
 		for word in self.wordObjectList:
 
 			correlation = self.checkAgainstCorpus(word.text, (word.frequency))
@@ -217,48 +216,46 @@ class lexengine:
 				pass
 		
 		if len(maybe) > 1:
-			print "[+] Clarification needed:\nI'm not sure if these words should be added to the dictionary. Press :\n\t\'0\' to skip all\n\t\'1\' to add all\n\t\'y\' to add word\n\t\'n\' to skip word."
+			print ("[+] Clarification needed:\nI'm not sure if these words should be added to the dictionary. Press :\n\t\'0\' to skip all\n\t\'1\' to add all\n\t\'y\' to add word\n\t\'n\' to skip word.")
 			addAll = False
 			for w in maybe:
 				if len(w.text) > 3 and w.text.strip() not in self.blacklistedWords:
 					try:
 						
 						if (not addAll):
-							print w.text
-							choice = (raw_input())
+							choice = input(w.text + "\n>")
 							if(choice == '0'):
 								break
 							if (choice == '1'):
 								addAll = True
 							if (choice == 'n'):
-								print " - Word not added -"
+								print (" - Word not added -")
 								continue
 							if (choice == 'y'):
-								print " - Word added - "
+								print (" - Word added - ")
 
 						resultsString+=(w.text+"\n")
 					except:
 						pass
 		
 		
-		print "[+] Clarification needed:\nI'm not sure if these are relevant phrases and should be added to the dictionary. Press :\n\t\'0\' to skip all\n\t\'1\' to add all\n\t\'y\' to add word\n\t\'n\' to skip word."
+		print ("[+] Clarification needed:\nI'm not sure if these are relevant phrases and should be added to the dictionary. Press :\n\t\'0\' to skip all\n\t\'1\' to add all\n\t\'y\' to add word\n\t\'n\' to skip word.")
 		addAll = False
 		for line in self.chainList:
 			if len(line.split(" ")) > 1:
 				try:
 					
 					if (not addAll):
-						print line
-						choice = (raw_input())
+						choice = print (line)
 						if(choice == '0'):
 							break
 						if (choice == '1'):
 							addAll = True
 						if (choice == 'n'):
-							print " - Phrase not added -"
+							print (" - Phrase not added -")
 							continue
 						if (choice == 'y'):
-							print " - Phrase added - "
+							print (" - Phrase added - ")
 
 					resultsString+=(line+"\n")
 					resultsString+=(line.replace(" ", "").strip()+"\n")
@@ -269,10 +266,10 @@ class lexengine:
 		r.close()
 		if len(resultsString) > 5:
 			#os.system("open {0}".format(self.resultFilelocation))
-			print "[=] DICTIONARY GENERATED [=]\nDictionary was successfully generated and saved to "+self.resultFilelocation
+			print ("[=] DICTIONARY GENERATED [=]\nDictionary was successfully generated and saved to "+self.resultFilelocation)
 
 		else:
-			print "[=] DICTIONARY GENERATION FAILED [=]\nNot enough text could be extracted from site. Make sure you specified domain and url correctly"
+			print ("[=] DICTIONARY GENERATION FAILED [=]\nNot enough text could be extracted from site. Make sure you specified domain and url correctly")
 		self.reset()
 	def aggregateDict(self, dictList):
 		words ={}
@@ -280,8 +277,8 @@ class lexengine:
 		count = 0
 		for i in dictList:
 			count+=1
-			print"[-] Processing {0}".format(i)
-			print "[-] Processed {0} dictionary".format(count)
+			print ("[-] Processing {0}".format(i))
+			print ("[-] Processed {0} dictionary".format(count))
 			f = open(i)
 			currDict = f.readlines()
 			f.close()
@@ -320,9 +317,9 @@ class lexengine:
 		f.close()
 		if len(finalWords) > 5:
 			#os.system("open {0}".format(self.resultFilelocation))
-			print "[=] DICTIONARY GENERATED [=]\nDictionary was successfully generated and saved to "+self.resultFilelocation
+			print ("[=] DICTIONARY GENERATED [=]\nDictionary was successfully generated and saved to "+self.resultFilelocation)
 		else:
-			print "[=] DICTIONARY GENERATION FAILED [=]\nNot enough text for aggregation. Are you sure that you have built dictionaries yet?"
+			print ("[=] DICTIONARY GENERATION FAILED [=]\nNot enough text for aggregation. Are you sure that you have built dictionaries yet?")
 
 	def collateDicts(self, dictList):
 		words ={}
@@ -331,8 +328,8 @@ class lexengine:
 		finalWords = {}
 		for i in dictList:
 			count+=1
-			print"[-] Processing {0}".format(i)
-			print "[-] Processed {0} dictionary".format(count)
+			print ("[-] Processing {0}".format(i))
+			print ("[-] Processed {0} dictionary".format(count))
 			f = open(i)
 			currDict = f.readlines()
 			f.close()
@@ -347,8 +344,8 @@ class lexengine:
 		f.close()
 		if len(finalWords) > 5:
 			#os.system("open {0}".format(self.resultFilelocation))
-			print "[=] DICTIONARY GENERATED [=]\nDictionary was successfully generated and saved to "+self.resultFilelocation
+			print ("[=] DICTIONARY GENERATED [=]\nDictionary was successfully generated and saved to "+self.resultFilelocation)
 		else:
-			print "[=] DICTIONARY GENERATION FAILED [=]\nNot enough text for aggregation. Are you sure that you have built dictionaries yet?"
+			print ("[=] DICTIONARY GENERATION FAILED [=]\nNot enough text for aggregation. Are you sure that you have built dictionaries yet?")
 
 

@@ -17,13 +17,13 @@ import os
 import bs4
 import os as _os
 import urllib as _ulib
-import urlparse as _uparse
+from urllib.parse import urlparse as _uparse
 import re
 class Spider:
 
     '''HTTP and FTP crawling, reporting, and checking'''
     import urllib as _ulib
-    import urlparse as _uparse
+    from urllib.parse import urlparse as _uparse
     from os import path as _path 
     from os import path as _path 
     from ftplib import FTP as _ftp
@@ -31,7 +31,7 @@ class Spider:
     from time import localtime as _localtime
     from ftplib import error_perm as _ftperr        
     from sgmllib import SGMLParseError as _sperror
-    from robotparser import RobotFileParser as _rparser
+    from urllib.robotparser import RobotFileParser as _rparser
     import threading
     # Use threads if available 
     try: from threading import Thread as _thread
@@ -89,7 +89,7 @@ class Spider:
                     return session
                 # Too many login attempts? End program
                 elif attempts <= tries:
-                    raise IOError, 'Permission denied.'
+                    raise IOError('Permission denied.')
                     import sys
                     sys.exit(0)           
 
@@ -416,7 +416,7 @@ class Spider:
                 return cbase, []
             url.close()
             self.urlCount +=1
-            print "[-] {0} - Fetched {1}".format(self.urlCount,newbase)
+            print ("[-] {0} - Fetched {1}".format(self.urlCount,newbase))
             t1 = threading.Thread(target=self.sanititse, args=(contents, self.urlCount))
             t1.start()
 
@@ -433,14 +433,16 @@ class Spider:
             return cbase, []
 
     def visible(self,element):
-	    try:
-		    if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
-			return False
-		    elif re.match('<!--.*-->', str(element)):
-			return False
-		    return True
-	    except:
-		    return False
+        try:
+            if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+                return False
+            elif re.match('<!--.*-->', str(element)):
+                return False
+            #Nose si es asi esto (lo de abajo; igual es en el mismo elif)
+            else:
+                return True
+        except:
+            return False
 
     def sanititse(self, text, count):
         soup_text = bs4.BeautifulSoup(text)
@@ -449,7 +451,7 @@ class Spider:
         raw = ""
         for i in vis:
             raw+=self.whitelist(i)
-        print "[+] Processed page {0}".format(count)
+        print ("[+] Processed page {0}".format(count))
         self.contents += raw+" "
 
 
@@ -678,7 +680,7 @@ class Spider:
             self.base, self._sb = base, base.split('/')
             self._visited[base], good[base] = 1, 1
         # If URL is bad, abort and raise error
-        else: raise IOError, "URL is invalid"
+        else: raise IOError("URL is invalid")
         # Adjust dept to length of base URL
         if self.depth and depth == 6: self.depth += len(self._sb)
         else: self.depth = depth + len(self._sb)

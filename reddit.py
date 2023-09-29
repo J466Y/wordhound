@@ -31,7 +31,7 @@ class Reddit:
 		for com in comments:
 			time.sleep(1.75)
 			try:
-				print "[-] Fetching thread {1} from: {0}".format(unicode(com).split("/")[2],unicode(com).split("/")[5])
+				print ("[-] Fetching thread {1} from: {0}".format(unicode(com).split("/")[2],unicode(com).split("/")[5]))
 			#raw_input()
 				r = requests.get("http://www.reddit.com{0}/.json".format(com), headers=headers)
 			except UnicodeError:
@@ -57,7 +57,7 @@ class Reddit:
 						self.rawText+= self.clean(sentence) + " "
 				#print comment
 		self.usedReddits += subreddit +", "
-		print "[+] Fetched {0} words from {1}\n".format(len(self.rawText.split(' ')), self.usedReddits)
+		print ("[+] Fetched {0} words from {1}\n".format(len(self.rawText.split(' ')), self.usedReddits))
 		
 
 	def clean(self, sentence):
