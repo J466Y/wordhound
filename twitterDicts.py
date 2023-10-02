@@ -14,10 +14,10 @@ class twitterSearch():
         twitterConf = config['Twitter']
         
 	
-        self.ckey = twitterConf['apikey']
-        self.csecret = twitterConf['apisecret']
-        self.atoken = twitterConf['accesstoken']
-        self.asecret = twitterConf['accesstokensecret']
+        self.ckey = twitterConf['Tapikey']
+        self.csecret = twitterConf['Tapisecret']
+        self.atoken = twitterConf['Taccesstoken']
+        self.asecret = twitterConf['Taccesstokensecret']
         if (len(self.ckey) == 0 or len(self.csecret) == 0 or len(self.atoken) == 0 or len(self.asecret) == 0 ):
             print ("[x] Error : Have you put in your Twitter API key? Its simple to setup (wordhound.conf)")
             raw_input()

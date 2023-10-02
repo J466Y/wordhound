@@ -2,11 +2,14 @@
 
 [Twitter]
 
-apikey=
-apisecret=
-accesstoken=
-accesstokensecret=
+Tapikey=
+Tapisecret=
+Taccesstoken=
+Taccesstokensecret=
 
+[Instagram]
+
+IsessionID=
 
 [Lexengine]
 

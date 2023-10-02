@@ -177,6 +177,8 @@ class client:
 			currDicts.append(self.workingDirectory+"TwitterHandleDictionary.txt")
 		if os.path.exists(self.workingDirectory + 'TwitterSearchTermDictionary.txt'):
 			currDicts.append(self.workingDirectory+"TwitterSearchTermDictionary.txt")
+		if os.path.exists(self.workingDirectory + 'InstagramBioDictionary.txt'):
+			currDicts.append(self.workingDirectory + 'InstagramBioDictionary.txt')
 		lex.aggregateDict(currDicts)
 
 	def buildDictionaryFromTwitterUsername(self, handle):
@@ -191,3 +193,6 @@ class client:
 		lex = LE.lexengine(t.searchByTerm(term, count), self.workingDirectory+"TwitterSearchTermDictionary.txt")
 		print ("[+] Beginning trim...")
 		lex.trimPercentage()
+	def buildDictionaryFromInstagramBio(self, Ihandle):
+		i = InstagramDicts.InstagramSearch()
+		lex = LE.lexengine(i.searchByProfile(Ihandle), self.workingDirectory+"InstagramBioDictionary.txt")

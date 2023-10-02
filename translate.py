@@ -22,11 +22,11 @@ class Translator:
 				tempChunk += i + '\n'
 
 		translation = ""
-		print "[-] Translating dictionary to {0}...".format(self.language)
+		print ("[-] Translating dictionary to {0}...".format(self.language))
 		count = 0
 		for i in chunks:
 			count += 1
-			print "[-] Translating part {0} of {1}".format(count,len(chunks))
+			print ("[-] Translating part {0} of {1}".format(count,len(chunks)))
 			translation += self.gs.translate(i, self.language)
 
 

@@ -34,11 +34,11 @@ class expand:
 				process+ [definition]
 			self.addWords(process)
 		self.write()
-		print "\n[+] Dictionary expanded..."
+		print ("\n[+] Dictionary expanded...")
 		raw_input()
 
 	def write(self):
-	 	items = ""
+		items = ""
 		for i in self.allWords.keys():
 			i = i.lower()
 			if "-" in i:
@@ -49,11 +49,11 @@ class expand:
 			#Extract only a-z
 			for w in splitword:
 				for c in i:
-					if len(c) >1:
+					if len(c) > 1:
 						continue
 					if ord(c) > 95 and ord(c) < 123:
-						final += c 
-			items += final + '\n'
+						final += c
+			items += final +'\n'
 		w = open(self.outputdic, 'w')
 		w.write(items)
 		w.close()
